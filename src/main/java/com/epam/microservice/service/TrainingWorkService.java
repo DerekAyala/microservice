@@ -10,6 +10,9 @@ import com.epam.microservice.repository.TrainingWorkRepository;
 import com.epam.microservice.repository.TrainingYearsRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +25,21 @@ import static com.epam.microservice.helper.Validations.*;
 
 @Service
 @RequiredArgsConstructor
+@EnableJms
 public class TrainingWorkService {
     private final TrainingWorkRepository trainingWorkRepository;
     private final TrainingYearsRepository trainingYearsRepository;
     private final TrainingMonthRepository trainingMonthRepository;
 
     private final Logger LOGGER = LoggerFactory.getLogger(TrainingWorkService.class);
+
+    @JmsListener(destination = "trainingQueue")
+    public void receiveMessage(@Payload TrainingRequest request) {
+        MDC.put("transactionId", request.getTransactionId());
+        LOGGER.info("Transaction Id: {}, Received training request: {}", MDC.get("transactionId"), request);
+        acceptTrainerWork(request);
+        MDC.remove("transactionId");
+    }
 
     public void acceptTrainerWork(TrainingRequest trainingRequest) {
         validateTrainingRequest(trainingRequest);
