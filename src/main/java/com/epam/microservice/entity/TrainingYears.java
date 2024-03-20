@@ -16,6 +16,6 @@ public class TrainingYears {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String yearNumber;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<TrainingMonth> months;
 }
