@@ -8,8 +8,12 @@ import com.epam.microservice.model.TrainingRequest;
 import com.epam.microservice.repository.TrainingMonthRepository;
 import com.epam.microservice.repository.TrainingWorkRepository;
 import com.epam.microservice.repository.TrainingYearsRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
+import org.springframework.jms.annotation.EnableJms;
+import org.springframework.jms.annotation.JmsListener;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +26,7 @@ import static com.epam.microservice.helper.Validations.*;
 
 @Service
 @RequiredArgsConstructor
+@EnableJms
 public class TrainingWorkService {
     private final TrainingWorkRepository trainingWorkRepository;
     private final TrainingYearsRepository trainingYearsRepository;
@@ -29,6 +34,7 @@ public class TrainingWorkService {
 
     private final Logger LOGGER = LoggerFactory.getLogger(TrainingWorkService.class);
 
+    @Transactional
     public void acceptTrainerWork(TrainingRequest trainingRequest) {
         validateTrainingRequest(trainingRequest);
         validateAction(trainingRequest);
@@ -42,6 +48,7 @@ public class TrainingWorkService {
         MDC.remove("Action");
     }
 
+    @Transactional
     public void addTrainingWork(TrainingRequest trainingRequest) {
         validateTrainingRequestForAdd(trainingRequest);
         LOGGER.info("Transaction Id: {}, Action: {}, Adding training work", MDC.get("transactionId"), MDC.get("Action"));
@@ -55,6 +62,7 @@ public class TrainingWorkService {
         }
     }
 
+    @Transactional
     public void deleteTrainingWork(TrainingRequest trainingRequest) {
         LOGGER.info("Transaction Id: {}, Action: {}, Deleting training work", MDC.get("transactionId"), MDC.get("Action"));
         validateTrainingRequestForDelete(trainingRequest);
@@ -110,7 +118,8 @@ public class TrainingWorkService {
         }
     }
 
-    private void createTrainingWork(TrainingRequest trainingRequest) {
+    @Transactional
+    protected void createTrainingWork(TrainingRequest trainingRequest) {
         TrainingWork trainingWork = new TrainingWork();
         trainingWork.setFirstName(trainingRequest.getFirstName());
         trainingWork.setLastName(trainingRequest.getLastName());
@@ -122,7 +131,8 @@ public class TrainingWorkService {
         LOGGER.info("Transaction Id: {}, Successfully created training work: {}", MDC.get("transactionId"), trainingWork);
     }
 
-    private void updateTrainingWork(TrainingRequest trainingRequest) {
+    @Transactional
+    protected void updateTrainingWork(TrainingRequest trainingRequest) {
         TrainingWork trainingWork = trainingWorkRepository.findByUsername(trainingRequest.getUsername()).get();
         List<TrainingYears> years = updateTrainingYears(trainingWork, trainingRequest);
         trainingWork.setYears(years);
@@ -130,7 +140,8 @@ public class TrainingWorkService {
         LOGGER.info("Transaction Id: {}, Successfully updated training work: {}", MDC.get("transactionId"), trainingWork);
     }
 
-    private TrainingYears createTrainingYears(TrainingRequest trainingRequest) {
+    @Transactional
+    protected TrainingYears createTrainingYears(TrainingRequest trainingRequest) {
         LOGGER.info("Transaction Id: {}, Creating new training years", MDC.get("transactionId"));
         TrainingYears trainingYears = new TrainingYears();
         Calendar calendar = Calendar.getInstance();
@@ -143,7 +154,8 @@ public class TrainingWorkService {
         return trainingYears;
     }
 
-    private List<TrainingYears> updateTrainingYears(TrainingWork trainingWork, TrainingRequest trainingRequest) {
+    @Transactional
+    protected List<TrainingYears> updateTrainingYears(TrainingWork trainingWork, TrainingRequest trainingRequest) {
         List<TrainingYears> trainingYears = trainingWork.getYears();
         boolean present = false;
         for (TrainingYears year : trainingYears) {
@@ -166,7 +178,8 @@ public class TrainingWorkService {
         return trainingYears;
     }
 
-    private TrainingMonth createTrainingMonth(TrainingRequest trainingRequest) {
+    @Transactional
+    protected TrainingMonth createTrainingMonth(TrainingRequest trainingRequest) {
         LOGGER.info("Transaction Id: {}, Creating new training month", MDC.get("transactionId"));
         TrainingMonth trainingMonth = new TrainingMonth();
         Calendar calendar = Calendar.getInstance();
@@ -178,7 +191,8 @@ public class TrainingWorkService {
         return trainingMonth;
     }
 
-    private List<TrainingMonth> updateTrainingMonth(TrainingYears trainingYears, TrainingRequest trainingRequest) {
+    @Transactional
+    protected List<TrainingMonth> updateTrainingMonth(TrainingYears trainingYears, TrainingRequest trainingRequest) {
         List<TrainingMonth> trainingMonths = trainingYears.getMonths();
         boolean present = false;
         for (TrainingMonth month : trainingMonths) {

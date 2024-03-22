@@ -19,6 +19,6 @@ public class TrainingWork {
     private String firstName;
     private String lastName;
     private Boolean status;
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<TrainingYears> years;
 }
