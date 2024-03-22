@@ -17,6 +17,6 @@ public class TrainingWorkController {
     @PostMapping
     public ResponseEntity<String> actionTraining(@RequestBody TrainingRequest trainingRequest) {
         trainingWorkService.acceptTrainerWork(trainingRequest);
-        return new ResponseEntity<>(trainingRequest.getAction() + "Action Completed successfully", HttpStatus.OK);
+        return new ResponseEntity<>(trainingRequest.getAction() + " Action Completed successfully", HttpStatus.OK);
     }
 }

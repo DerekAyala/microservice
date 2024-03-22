@@ -1,14 +1,15 @@
 package com.epam.microservice.model;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Date;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
+@ToString
 public class TrainingRequest {
     private String username;
     private String firstName;
@@ -17,4 +18,5 @@ public class TrainingRequest {
     private Date date;
     private Integer duration;
     private String action;
+    private String transactionId;
 }

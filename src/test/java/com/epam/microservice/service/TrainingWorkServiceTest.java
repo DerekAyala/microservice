@@ -2,13 +2,11 @@ package com.epam.microservice.service;
 
 import com.epam.microservice.entity.TrainingMonth;
 import com.epam.microservice.entity.TrainingWork;
-import com.epam.microservice.entity.TrainingYears;
+import com.epam.microservice.entity.TrainingYear;
 import com.epam.microservice.exception.MissingAttributes;
 import com.epam.microservice.exception.NotFoundException;
 import com.epam.microservice.model.TrainingRequest;
-import com.epam.microservice.repository.TrainingMonthRepository;
 import com.epam.microservice.repository.TrainingWorkRepository;
-import com.epam.microservice.repository.TrainingYearsRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,13 +33,9 @@ public class TrainingWorkServiceTest {
     private TrainingWorkService trainingWorkService;
     @Mock
     private TrainingWorkRepository trainingWorkRepository;
-    @Mock
-    private TrainingYearsRepository trainingYearsRepository;
-    @Mock
-    private TrainingMonthRepository trainingMonthRepository;
 
     TrainingWork trainingWork;
-    TrainingYears trainingYears;
+    TrainingYear trainingYear;
     TrainingMonth trainingMonth;
 
     TrainingRequest trainingRequest;
@@ -55,18 +49,16 @@ public class TrainingWorkServiceTest {
         trainingWork.setStatus(true);
         trainingWork.setId(1L);
 
-        trainingYears = new TrainingYears();
-        trainingYears.setId(1L);
-        trainingYears.setYearNumber("2021");
+        trainingYear = new TrainingYear();
+        trainingYear.setYearNumber("2021");
 
         trainingMonth = new TrainingMonth();
-        trainingMonth.setId(1L);
         trainingMonth.setMonthName("January");
         trainingMonth.setHours(10);
 
         // Use ArrayList instead of List.of
-        trainingYears.setMonths(new ArrayList<>(Arrays.asList(trainingMonth)));
-        trainingWork.setYears(new ArrayList<>(Arrays.asList(trainingYears)));
+        trainingYear.setMonths(new ArrayList<>(Arrays.asList(trainingMonth)));
+        trainingWork.setYears(new ArrayList<>(Arrays.asList(trainingYear)));
 
         LocalDate localDate = LocalDate.of(2021, 1, 20);
         Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
