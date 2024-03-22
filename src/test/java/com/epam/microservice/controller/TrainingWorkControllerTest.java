@@ -32,11 +32,8 @@ public class TrainingWorkControllerTest {
     @Test
     void actionTraining() {
         // Arrange
-        TrainingRequest trainingRequest = TrainingRequest.builder()
-                .username("Username")
-                .date(new Date())
-                .action("")
-                .build();
+        TrainingRequest trainingRequest = new TrainingRequest("username", "firstName", "lastName", true, new Date(), 1, "add", "transactionId");
+
 
         // Act
         ResponseEntity<String> response = trainingWorkController.actionTraining(trainingRequest);
@@ -44,6 +41,6 @@ public class TrainingWorkControllerTest {
         // Assert
         verify(trainingWorkService, times(1)).acceptTrainerWork(any(TrainingRequest.class));
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Action Completed successfully", response.getBody());
+        assertEquals("add Action Completed successfully", response.getBody());
     }
 }
