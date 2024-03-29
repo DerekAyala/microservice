@@ -47,7 +47,7 @@ public class TrainingWorkServiceTest {
         trainingWork.setLastName("Doe");
         trainingWork.setUsername("john.doe");
         trainingWork.setStatus(true);
-        trainingWork.setId(1L);
+        trainingWork.setId("1");
 
         trainingYear = new TrainingYear();
         trainingYear.setYearNumber("2021");
@@ -57,8 +57,8 @@ public class TrainingWorkServiceTest {
         trainingMonth.setHours(10);
 
         // Use ArrayList instead of List.of
-        trainingYear.setMonths(new ArrayList<>(Arrays.asList(trainingMonth)));
-        trainingWork.setYears(new ArrayList<>(Arrays.asList(trainingYear)));
+        trainingYear.setMonths(new ArrayList<>(List.of(trainingMonth)));
+        trainingWork.setYears(new ArrayList<>(List.of(trainingYear)));
 
         LocalDate localDate = LocalDate.of(2021, 1, 20);
         Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
