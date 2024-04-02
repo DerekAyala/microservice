@@ -2,6 +2,7 @@ package com.epam.microservice.Controller;
 
 import com.epam.microservice.exception.MissingAttributes;
 import com.epam.microservice.exception.NotFoundException;
+import com.epam.microservice.model.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

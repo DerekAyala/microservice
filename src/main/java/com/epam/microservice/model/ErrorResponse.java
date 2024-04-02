@@ -1,4 +1,4 @@
-package com.epam.microservice.Controller;
+package com.epam.microservice.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
